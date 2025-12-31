@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0077ff">
+
+  <meta charset="UTF-8">
+  <title>Impara a Codificare</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #contenuto {
+      background: white;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      min-height: 150px;
+    }
+
+    pre {
+      background: #eee;
+      padding: 10px;
+      text-align: left;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>📘 Impara a Codificare</h1>
+  <p>Premi un pulsante per imparare</p>
+
+  <button onclick="lezione('codice')">Cos'è il codice</button>
+  <button onclick="lezione('input')">Input</button>
+  <button onclick="lezione('variabili')">Variabili</button>
+  <button onclick="lezione('condizioni')">Condizioni</button>
+  <button onclick="quiz()">Quiz</button>
+
+  <div id="contenuto">
+    <p>Scegli una lezione 👆</p>
+  </div>
+
+<script>
+/* ===== LEZIONI ===== */
+
+function lezione(tipo) {
+  let testo = "";
+  let codice = "";
+
+  if (tipo === "codice") {
+    testo = "Il codice è un insieme di istruzioni che il computer esegue.";
+    codice = `
+INPUT → LOGICA → OUTPUT
+    `;
+  }
+
+  if (tipo === "input") {
+    testo = "L'input è ciò che l'utente inserisce.";
+    codice = `
+<input type="text">
+<input type="number">
+<input type="checkbox">
+    `;
+  }
+
+  if (tipo === "variabili") {
+    testo = "Una variabile è una scatola che contiene un valore.";
+    codice = `
+let nome = "Roberto";
+let eta = 30;
+    `;
+  }
+
+  if (tipo === "condizioni") {
+    testo = "Le condizioni permettono al codice di prendere decisioni.";
+    codice = `
+if (eta >= 18) {
+  // maggiorenne
+} else {
+  // minorenne
+}
+    `;
+  }
+
+  document.getElementById("contenuto").innerHTML =
+    "<p>" + testo + "</p><pre>" + codice + "</pre>";
+}
+
+/* ===== QUIZ ===== */
+
+let domanda = 0;
+
+let quizDomande = [
+  {
+    testo: "Cos'è una variabile?",
+    risposte: [
+      { testo: "Un bottone", corretta: false },
+      { testo: "Una scatola che contiene un valore", corretta: true },
+      { testo: "Un colore", corretta: false }
+    ]
+  },
+  {
+    testo: "A cosa serve un input?",
+    risposte: [
+      { testo: "A ricevere dati dall'utente", corretta: true },
+      { testo: "A decorare la pagina", corretta: false },
+      { testo: "A stampare", corretta: false }
+    ]
+  }
+];
+
+function quiz() {
+  domanda = 0;
+  mostraDomanda();
+}
+
+function mostraDomanda() {
+  let q = quizDomande[domanda];
+  let html = `<h2>Quiz</h2><p><strong>${q.testo}</strong></p>`;
+
+  q.risposte.forEach(r => {
+    html += `<button onclick="risposta(${r.corretta})">${r.testo}</button><br><br>`;
+  });
+
+  html += `<p id="feedback"></p>`;
+
+  document.getElementById("contenuto").innerHTML = html;
+}
+
+function risposta(corretta) {
+  if (corretta) {
+    document.getElementById("feedback").innerText = "✅ Risposta corretta!";
+    domanda++;
+
+    if (domanda < quizDomande.length) {
+      setTimeout(mostraDomanda, 1000);
+    } else {
+      document.getElementById("contenuto").innerHTML =
+        "<h2>🎉 Quiz completato!</h2>";
+    }
+  } else {
+    document.getElementById("feedback").innerText =
+      "❌ Risposta sbagliata. Riprova!";
+  }
+}
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("Service Worker registrato"))
+    .catch(err => console.log("Errore SW", err));
+}
+</script>
+
+
+</body>
+</html>
